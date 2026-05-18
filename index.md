@@ -24,7 +24,7 @@ A recurring theme in my work is to combine **mechanistic analysis** with **toy m
 - **Tsinghua Comprehensive Excellence Scholarship** (twice, Top 5%) Oct. 2024 & Oct. 2025
 - **Tsinghua Academic Excellence Scholarship** (twice), Oct. 2024 & Oct. 2025
 
-## Leadership and service
+## Leadership and Service
 
 I am the **President of the Student Union** of the Department of Physics at Tsinghua University. 
 
