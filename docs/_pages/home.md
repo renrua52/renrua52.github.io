@@ -36,3 +36,5 @@ feature_row:
 ---
 
 {% include feature_row %}
+
+This is the homepage of Ziri.
