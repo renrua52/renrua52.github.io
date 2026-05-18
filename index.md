@@ -18,6 +18,11 @@ I am particularly interested in:
 
 A recurring theme in my work is to combine **mechanistic analysis** with **toy models** and **controlled experiments** to uncover simple quantitative laws behind the behavior of complex models.
 
+## Awards
+
+- Tsinghua Comprehensive Excellence Scholarship (twice, Top 5%) Oct. 2024 & Oct. 2025
+- **Tsinghua Academic Excellence Scholarship** (twice), Oct. 2024 & Oct. 2025
+
 ---
 
 ## Publications

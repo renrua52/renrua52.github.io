@@ -12,7 +12,7 @@
 
 # theme                  : "minimal-mistakes-jekyll"
 remote_theme           : "mmistakes/minimal-mistakes"
-minimal_mistakes_skin    : "default" # "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise", "catppuccin_latte", "catppuccin_mocha"
+minimal_mistakes_skin    : "aqua" # "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise", "catppuccin_latte", "catppuccin_mocha"
 
 # Site Settings
 locale                   : "en-US"
@@ -121,9 +121,6 @@ author:
   email            : "rzr23@mails.tsinghua.edu.cn"
   # fediverse      : "@you@instance.social"  # used for fediverse:creator meta tag
   links:
-    - label: "Email"
-      icon: "fas fa-fw fa-square-envelope"
-      url: "rzr23@mails.tsinghua.edu.cn"
     - label: "Twitter"
       icon: "fab fa-fw fa-square-x-twitter"
       url: "https://x.com/JacobRen14"
@@ -134,9 +131,6 @@ author:
 # Site Footer
 footer:
   links:
-    - label: "Email"
-      icon: "fas fa-fw fa-square-envelope"
-      url: "rzr23@mails.tsinghua.edu.cn"
     - label: "Website"
       icon: "fas fa-fw fa-link"
       url: "https://renrua52.github.io/"
