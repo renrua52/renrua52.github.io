@@ -225,16 +225,6 @@ timezone: # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 paginate: 5 # amount of posts to show
 paginate_path: /page:num/
 
-navigation:
-  - title: "Home"
-    url: /
-  - title: "Publications"
-    url: /publications/
-  - title: "Projects"
-    url: /projects/
-  - title: "CV"
-    url: /cv/
-
 # Pagination with jekyll-paginate-v2
 # See https://github.com/sverrirs/jekyll-paginate-v2/blob/master/README-GENERATOR.md#site-configuration
 #   for configuration details
