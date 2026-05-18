@@ -2,6 +2,7 @@
 layout: single
 permalink: /
 author_profile: true
+classes: wide
 ---
 
 I am Zirui Ren (任梓瑞), a third-year undergraduate at the Department of Physics, Tsinghua University. I am broadly interested in the emerging science of large models, especially the intersection of mechanistic interpretability, machine learning theory, and the science of AI.
