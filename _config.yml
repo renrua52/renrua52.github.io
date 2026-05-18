@@ -115,7 +115,7 @@ analytics:
 # Site Author
 author:
   name             : "Zirui Ren"
-  avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
+  avatar           : "/assets/images/avatar.jpg" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
   bio              : "Undergraduate at the Department of Physics, Tsinghua University."
   location         : "Beijing, China"
   email            : "rzr23@mails.tsinghua.edu.cn"
