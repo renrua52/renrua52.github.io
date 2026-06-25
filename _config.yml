@@ -116,7 +116,7 @@ analytics:
 author:
   name             : "Zirui Ren"
   avatar           : "/assets/images/avatar.jpg" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "Undergraduate at the Department of Physics, Tsinghua University."
+  bio              : "Third-year undergraduate in Physics (minor in CS), Tsinghua University. GPA: 3.93/4.0."
   location         : "Beijing, China"
   email            : "rzr23@mails.tsinghua.edu.cn"
   # fediverse      : "@you@instance.social"  # used for fediverse:creator meta tag
