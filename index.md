@@ -11,35 +11,35 @@ I am currently working with [Prof. Ziming Liu](https://kindxiaoming.github.io/) 
 
 ## Education
 
-**Tsinghua University**, Beijing, China — Sep. 2023 | Present  
-Major in Physics | Minor in Computer Science and Technology — Cumulative GPA: **3.93 / 4.0**
+**Tsinghua University**, Beijing, China — Sep. 2023 – Present  
+Major in Physics · Minor in Computer Science and Technology — Cumulative GPA: **3.93 / 4.0**
 
 - **Selected Awards:** Tsinghua Comprehensive Excellence Scholarship (Top 5%, 2024 & 2025)
-- **Language Proficiency:** TOEFL 113/120 | CET-6 665/710
+- **Language Proficiency:** TOEFL 113/120 · CET-6 665/710
 
 ## Research & Internship Experience
 
-**AI for AI: Meta-Modeling for Pre-training Dynamics & Hyperparameter Extrapolation** — Jan. 2026 | Present  
+**AI for AI: Meta-Modeling for Pre-training Dynamics & Hyperparameter Extrapolation** — Jan. 2026 – Present  
 *Advisor: [Prof. Ziming Liu](https://kindxiaoming.github.io/), College of AI, Tsinghua University*
 
 - **Meta-Modeling beyond Scaling Laws:** Pioneering an "AI for AI" paradigm to break the compute bottleneck of LLM pre-training. Developing a neural meta-model trained to accurately predict training trajectories and performance of target foundation models across various architectures and hyperparameter spaces.
 - **Inverse Optimization:** Engineering a differentiable pipeline that leverages the meta-model's predictions to deduce optimal pre-training configurations, aiming to extrapolate to large-scale models beyond traditional scaling laws.
 
-**Mechanistic Analysis of Reasoning Models** — Jul. 2025 | Mar. 2026  
-*Collaboration with MIT | Advisor: [Dr. Ziming Liu](https://kindxiaoming.github.io/)*
+**Mechanistic Analysis of Reasoning Models** — Jul. 2025 – Mar. 2026  
+*Collaboration with MIT · Advisor: [Dr. Ziming Liu](https://kindxiaoming.github.io/)*
 
 - **Discovery of Latent Anomalies:** Conducted a systematic mechanistic study on Hierarchical Reasoning Models (HRMs). By probing latent-state trajectories and structural geometry, identified critical violations of fixed-point assumptions, proving that advanced reasoners exhibit a hidden "guessing" shortcut instead of robust rule-based deduction.
 - **Intervention & Optimization:** Engineered three training-free representation-steering and inference-guidance techniques derived from mechanistic insights, drastically boosting HRM accuracy on *Sudoku-Extreme* from 55% to **97%**.
 - **Infrastructure:** Independently implemented the end-to-end distributed evaluation and probing pipeline (PyTorch), maintaining the open-source [codebase](https://github.com/renrua52/hrm-mechanistic-analysis). (Resulted in a first-author paper.)
 
-**Research Intern (Foundation Model Architecture & Distillation)** — Jun. 2025 | Aug. 2025  
-*ModelBest Inc. (面壁智能) | Advisor: [Prof. Zhiyuan Liu](https://nlp.csai.tsinghua.edu.cn/~lzy/), Tsinghua University*
+**Research Intern (Foundation Model Architecture & Distillation)** — Jun. 2025 – Aug. 2025  
+*ModelBest Inc. (面壁智能) · Advisor: [Prof. Zhiyuan Liu](https://nlp.csai.tsinghua.edu.cn/~lzy/), Tsinghua University*
 
 - **Architecture Exploration for SALA-9B:** Served as an early-stage collaborator exploring sub-quadratic model architectures. Conducted fine-grained ablation studies on hybrid lightning-attention modules in 0.6B-scale models.
 - **Pre-training & Evaluation:** Executed a 3-stage progressive knowledge distillation pipeline from Qwen3-0.6B via the RADLADS protocol. Tracked training stability and evaluated benchmarks (MMLU, HellaSwag, PIQA, etc.), laying the empirical foundation for ModelBest's million-context **SALA-9B** model.
 
-**Research Intern (Test-Time Scaling for Long-to-long Generation)** — Feb. 2025 | Aug. 2025  
-*ModelBest Inc. (面壁智能) | Advisor: [Prof. Zhiyuan Liu](https://nlp.csai.tsinghua.edu.cn/~lzy/), Tsinghua University*
+**Research Intern (Test-Time Scaling for Long-to-long Generation)** — Feb. 2025 – Aug. 2025  
+*ModelBest Inc. (面壁智能) · Advisor: [Prof. Zhiyuan Liu](https://nlp.csai.tsinghua.edu.cn/~lzy/), Tsinghua University*
 
 - **Algorithm Design:** Co-developed LLM×MapReduce-V2, a novel test-time scaling framework borrowing CNN convolutional concepts to map ultra-long contexts into structured, multi-stage reasoning graphs for high-fidelity long-form text generation.
 - **Implementation:** Successfully scaled the algorithmic prototype into [SurveyGO](https://surveygo.znyx.com.cn/), ModelBest's production-level academic survey platform. Designed the engine handling incremental text refinement conditioned on dynamic streaming references.
