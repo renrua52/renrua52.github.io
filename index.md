@@ -17,18 +17,6 @@ Major in Physics | Minor in Computer Science and Technology — Cumulative GPA: 
 - **Selected Awards:** Tsinghua Comprehensive Excellence Scholarship (Top 5%, 2024 & 2025)
 - **Language Proficiency:** TOEFL 113/120 | CET-6 665/710
 
-## Publications
-
-**Are Your Reasoning Models Reasoning or Guessing? A Mechanistic Analysis of Hierarchical Reasoning Models**  
-**Zirui Ren**, Ziming Liu  
-[arXiv:2601.10679](https://arxiv.org/abs/2601.10679). *Under review at **NeurIPS 2026** (First Author)*  
-We perform a systematic mechanistic study of hierarchical reasoning models (HRMs). By probing latent-state trajectories and structural geometry, we identify critical violations of fixed-point assumptions and a hidden "guessing" shortcut in advanced reasoners. We propose three training-free augmentation techniques that improve HRM accuracy on *Sudoku-Extreme* from **55%** to **97%**, and release an [open-source pipeline](https://github.com/renrua52/hrm-mechanistic-analysis).
-
-**LLM×MapReduce-V2: Entropy-Driven Convolutional Test-Time Scaling for Generating Long-Form Articles from Extremely Long Resources**  
-Haoyu Wang, Yujia Fu, Zhu Zhang, Shuo Wang, **Zirui Ren**, Xiaorong Wang, Zhili Li, Chaoqun He, Bo An, Zhiyuan Liu, Maosong Sun  
-[arXiv:2504.05732](https://arxiv.org/abs/2504.05732)  
-We develop a test-time scaling framework inspired by convolutional architectures, enabling high-fidelity long-form text generation from extremely long inputs. The method is deployed in [SurveyGO](https://surveygo.znyx.com.cn/), ModelBest's production-level academic survey platform.
-
 ## Research & Internship Experience
 
 **AI for AI: Meta-Modeling for Pre-training Dynamics & Hyperparameter Extrapolation** — Jan. 2026 | Present  
@@ -56,7 +44,14 @@ We develop a test-time scaling framework inspired by convolutional architectures
 - **Algorithm Design:** Co-developed LLM×MapReduce-V2, a novel test-time scaling framework borrowing CNN convolutional concepts to map ultra-long contexts into structured, multi-stage reasoning graphs for high-fidelity long-form text generation.
 - **Implementation:** Successfully scaled the algorithmic prototype into [SurveyGO](https://surveygo.znyx.com.cn/), ModelBest's production-level academic survey platform. Designed the engine handling incremental text refinement conditioned on dynamic streaming references.
 
-## Technical Skills
+## Publications
 
-- **Coding:** Python, PyTorch, C/C++, CUDA/Triton
-- **Domain Expertise:** Large Language Model Pre-training / Knowledge Distillation, Linear Attention Mechanisms, Test-time Scaling, Mechanistic Interpretability
+**Are Your Reasoning Models Reasoning or Guessing? A Mechanistic Analysis of Hierarchical Reasoning Models**  
+**Zirui Ren**, Ziming Liu  
+[arXiv:2601.10679](https://arxiv.org/abs/2601.10679). *Under review at **NeurIPS 2026** (First Author)*  
+We perform a systematic mechanistic study of hierarchical reasoning models (HRMs). By probing latent-state trajectories and structural geometry, we identify critical violations of fixed-point assumptions and a hidden "guessing" shortcut in advanced reasoners. We propose three training-free augmentation techniques that improve HRM accuracy on *Sudoku-Extreme* from **55%** to **97%**, and release an [open-source pipeline](https://github.com/renrua52/hrm-mechanistic-analysis).
+
+**LLM×MapReduce-V2: Entropy-Driven Convolutional Test-Time Scaling for Generating Long-Form Articles from Extremely Long Resources**  
+Haoyu Wang, Yujia Fu, Zhu Zhang, Shuo Wang, **Zirui Ren**, Xiaorong Wang, Zhili Li, Chaoqun He, Bo An, Zhiyuan Liu, Maosong Sun  
+[arXiv:2504.05732](https://arxiv.org/abs/2504.05732)  
+We develop a test-time scaling framework inspired by convolutional architectures, enabling high-fidelity long-form text generation from extremely long inputs. The method is deployed in [SurveyGO](https://surveygo.znyx.com.cn/), ModelBest's production-level academic survey platform.
