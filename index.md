@@ -49,9 +49,15 @@ Major in Physics · Minor in Computer Science and Technology — Cumulative GPA:
 **Are Your Reasoning Models Reasoning or Guessing? A Mechanistic Analysis of Hierarchical Reasoning Models**  
 **Zirui Ren**, Ziming Liu  
 [arXiv:2601.10679](https://arxiv.org/abs/2601.10679). *Under review at **NeurIPS 2026** (First Author)*  
+
+![]({{ "/assets/images/hrm.png" | relative_url }})
+
 We perform a systematic mechanistic study of hierarchical reasoning models (HRMs). By probing latent-state trajectories and structural geometry, we identify critical violations of fixed-point assumptions and a hidden "guessing" shortcut in advanced reasoners. We propose three training-free augmentation techniques that improve HRM accuracy on *Sudoku-Extreme* from **55%** to **97%**, and release an [open-source pipeline](https://github.com/renrua52/hrm-mechanistic-analysis).
 
 **LLM×MapReduce-V2: Entropy-Driven Convolutional Test-Time Scaling for Generating Long-Form Articles from Extremely Long Resources**  
 Haoyu Wang, Yujia Fu, Zhu Zhang, Shuo Wang, **Zirui Ren**, Xiaorong Wang, Zhili Li, Chaoqun He, Bo An, Zhiyuan Liu, Maosong Sun  
 [arXiv:2504.05732](https://arxiv.org/abs/2504.05732)  
+
+![]({{ "/assets/images/llm_mapreduce.png" | relative_url }})
+
 We develop a test-time scaling framework inspired by convolutional architectures, enabling high-fidelity long-form text generation from extremely long inputs. The method is deployed in [SurveyGO](https://surveygo.znyx.com.cn/), ModelBest's production-level academic survey platform.
