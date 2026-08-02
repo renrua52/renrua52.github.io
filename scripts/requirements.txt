@@ -1,0 +1,5 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch>=2.1
+transformers>=4.43,<4.51
+beautifulsoup4>=4.12
+numpy>=1.24

@@ -1,0 +1,47 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import publications from "../data/publications.json";
+
+const highlightSelf = (authors: string) =>
+  authors.replace(/Zirui Ren/g, "<strong>Zirui Ren</strong>");
+---
+
+<BaseLayout title="Publications" page="publications" prompt="ls publications/">
+  <main>
+    <header class="page-head">
+      <h1 class="page-title">Publications</h1>
+      <div class="page-sub">
+        {publications.length} paper{publications.length === 1 ? "" : "s"} ·
+        also on <a href="https://scholar.google.com/">google scholar</a>
+      </div>
+    </header>
+
+    <section class="blk">
+      {
+        publications.map((pub) => (
+          <div class="pub">
+            <div class="pub-title">{pub.title}</div>
+            <div class="pub-authors" set:html={highlightSelf(pub.authors)} />
+            <div class="pub-venue">
+              {pub.venue}
+              {pub.note && ` · ${pub.note}`}
+            </div>
+            <div class="pub-links">
+              [
+              {pub.links.map((l, i) => (
+                <>
+                  <a href={l.url}>{l.label}</a>
+                  {i < pub.links.length - 1 ? " | " : ""}
+                </>
+              ))}
+              ]
+            </div>
+            {pub.image && <img src={pub.image} alt={`${pub.title} — figure`} />}
+            {pub.figLabel && <div class="fig-label">{pub.figLabel}</div>}
+            <p>{pub.abstract}</p>
+          </div>
+        ))
+      }
+    </section>
+  </main>
+</BaseLayout>

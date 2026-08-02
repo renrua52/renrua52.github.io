@@ -1,0 +1,72 @@
+---
+import { SITE } from "../consts";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  page: "about" | "blog" | "publications" | "none";
+  prompt?: string;
+}
+
+const { title, description = SITE.description, page, prompt } = Astro.props;
+const pageTitle = title ? `${title} — ${SITE.title}` : `${SITE.title} — About`;
+const navItems: { id: string; label: string; href: string; external?: boolean }[] = [
+  { id: "about", label: "about", href: "/" },
+  { id: "blog", label: "blog", href: "/blog/" },
+  { id: "publications", label: "publications", href: "/publications/" },
+  { id: "cv", label: "cv", href: "/assets/files/CV_Zirui_Ren.pdf", external: true },
+];
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="wrap">
+      <nav class="site-nav">
+        <a class="prompt" href="/"
+          ><span class="user">zirui@thu</span> ~ % {prompt ?? "ls"}</a
+        >
+        <div class="nav-links">
+          {
+            navItems.map((item) => (
+              <a
+                href={item.href}
+                class={page === item.id ? "active" : ""}
+                {...(item.external ? { target: "_blank", rel: "noopener" } : {})}
+              >
+                {item.label}
+              </a>
+            ))
+          }
+        </div>
+      </nav>
+
+      <slot />
+
+      <footer class="site-footer">
+        <span>© 2026 Zirui Ren</span>
+        <span>
+          <a href={SITE.github}>github</a> · <a href={SITE.twitter}>twitter</a> ·
+          <a href={`mailto:${SITE.email}`}>email</a><span class="cursor"></span>
+        </span>
+      </footer>
+    </div>
+  </body>
+</html>

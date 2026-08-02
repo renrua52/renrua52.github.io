@@ -1,0 +1,40 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+const fmt = (d: Date) =>
+  d.toISOString().slice(0, 10);
+---
+
+<BaseLayout title="Blog" page="blog" prompt="ls blog/">
+  <main>
+    <header class="page-head">
+      <h1 class="page-title">Blog</h1>
+      <div class="page-sub">
+        {posts.length} post{posts.length === 1 ? "" : "s"} · notes on large
+        models and how they learn
+      </div>
+    </header>
+
+    <section class="blk">
+      <ul class="post-list">
+        {
+          posts.map((post) => (
+            <li>
+              <span class="p-date">{fmt(post.data.pubDate)}</span>
+              <span class="p-title">
+                <a href={`/blog/${post.id}/`}>{post.data.title}</a>
+              </span>
+              <div class="p-desc">{post.data.description}</div>
+            </li>
+          ))
+        }
+        {posts.length === 0 && <li class="p-desc">// nothing here yet</li>}
+      </ul>
+    </section>
+  </main>
+</BaseLayout>
