@@ -7,22 +7,27 @@ import BaseLayout from "../layouts/BaseLayout.astro";
        scripts/precompute_attention.py wraps every token here in a .tok span. -->
   <main id="attn-root">
     <header class="page-head">
-      <h1 class="page-title">Zirui Ren</h1>
-      <div class="page-sub">任梓瑞 · Beijing, China</div>
+      <h1 class="page-title">Zirui Ren (任梓瑞)</h1>
+      <div class="page-sub">Beijing, China</div>
       <p>
-        I am a third-year undergraduate at the Department of Physics, Tsinghua
-        University, with a minor in Computer Science and Technology. I am
-        broadly interested in the science of large models, especially LLM
-        pre-training, mechanistic interpretability, and meta-modeling.
-      </p>
-      <p>
+        I am currently a senior at the Department of Physics, Tsinghua
+        University, and an incoming PhD at the College of AI, Tsinghua University.
         I am currently working with
         <a href="https://kindxiaoming.github.io/">Prof. Ziming Liu</a>
-        on meta-modeling for pre-training dynamics and hyperparameter
-        extrapolation. Previously, I have also collaborated with
+        on AI4AI. Previously, I have also collaborated with
         <a href="https://nlp.csai.tsinghua.edu.cn/~lzy/">Prof. Zhiyuan Liu</a>
-        and researchers at ModelBest (面壁智能) on foundation model
-        architecture, distillation, and long-form generation.
+        and researchers at ModelBest (面壁智能) on long-context foundation models.
+      </p>
+      <p>
+        I am excited about enabling frontier models to conduct innovative research,
+        both on natural science (AI for Science) and on their own training (AI for AI, a.k.a. RSI).
+        The paths I explored cover data synthesis, benchmarking and agentic systems.
+      </p>
+      <p>
+        For this, I do adopt the top-down approach, e.g., black-box tuning on a strong pretrained model.
+        Besides, I also take the bottom-up approach, prioritizing understanding over benchmark scores (a.k.a. Physics/Science of AI).
+        This approach comprises mechanistic interpretability, training dynamics and optimization theory.
+        My personal (and perhaps dissensual) belief is that bottom-up insights shall be the evergreen intellectual legacies of human research.
       </p>
     </header>
 
@@ -31,7 +36,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       <div class="entry">
         <div class="entry-title">Tsinghua University, Beijing</div>
         <div class="entry-meta">
-          <span class="date">2023 — present</span> · Physics major, CS minor ·
+          <span class="date">2023 — present</span> · Physics major ·
           GPA 3.93/4.0
         </div>
         <ul>
@@ -45,29 +50,45 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     </section>
 
     <section class="blk">
-      <h2 class="sec-title">Research &amp; Internship</h2>
+      <h2 class="sec-title">Research &amp; Internship Experience</h2>
 
       <div class="entry">
         <div class="entry-title">
-          AI for AI: Meta-Modeling for Pre-training Dynamics
+          ArchitectureIQ: benchmarking deep learning modeling intuition
         </div>
         <div class="entry-meta">
-          <span class="date">2026.01 — present</span> · Advisor: Prof. Ziming
-          Liu, College of AI, Tsinghua
+          <span class="date">2026.06 — present</span> · Advisor: Prof. Ziming
+          Liu, College of AI, Tsinghua Univ.
         </div>
         <ul>
           <li>
-            <strong>Meta-Modeling beyond Scaling Laws:</strong> Pioneering an
-            "AI for AI" paradigm to break the compute bottleneck of LLM
-            pre-training. Developing a neural meta-model trained to accurately
-            predict training trajectories and performance of target foundation
-            models across various architectures and hyperparameter spaces.
+            In high-level abstraction, self-evolving AI is essentially optimization in the configuration space.
+            Agentic frameworks handle the high-level feedback loop well.
+            However, local adjustments, like tuning a parameter or tweaking the architecture, are highly under-optimized.
+            We believe that before being able to propose better settings,
+            the agent should (at least) have intuitions on what a good one look like.
+            We are developing <a href="https://github.com/renrua52/ArchitectureIQ">ArchitectureIQ</a>,
+            a benchmark gauging exactly this capability.
           </li>
+        </ul>
+      </div>
+
+      <div class="entry">
+        <div class="entry-title">
+          OPHIS: Towards Mechanistic Auto-Research
+        </div>
+        <div class="entry-meta">
+          <span class="date">2026.06 — present</span> · Advisor: Prof. Ziming
+          Liu, College of AI, Tsinghua Univ.
+        </div>
+        <ul>
           <li>
-            <strong>Inverse Optimization:</strong> Engineering a differentiable
-            pipeline that leverages the meta-model's predictions to deduce
-            optimal pre-training configurations, aiming to extrapolate to
-            large-scale models beyond traditional scaling laws.
+            Today's auto-research systems mostly do trial-and-error: 
+            they remix Internet priors or remember what worked before, 
+            but rarely explain <strong>why</strong>. 
+            We propose mechanistic auto-research via OPHIS — 
+            Observation → Problem → Hypothesis → Intervention → Speed-up — 
+            a pipeline that turns insight about internal training dynamics into practical speedup tricks.
           </li>
         </ul>
       </div>
@@ -82,34 +103,19 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </div>
         <ul>
           <li>
-            <strong>Discovery of Latent Anomalies:</strong> Conducted a
-            systematic mechanistic study on Hierarchical Reasoning Models
-            (HRMs). By probing latent-state trajectories and structural
-            geometry, identified critical violations of fixed-point
-            assumptions, proving that advanced reasoners exhibit a hidden
-            "guessing" shortcut instead of robust rule-based deduction.
-          </li>
-          <li>
-            <strong>Intervention &amp; Optimization:</strong> Engineered three
-            training-free representation-steering and inference-guidance
-            techniques derived from mechanistic insights, drastically boosting
-            HRM accuracy on <em>Sudoku-Extreme</em> from 55% to
-            <strong>97%</strong>.
-          </li>
-          <li>
-            <strong>Infrastructure:</strong> Independently implemented the
-            end-to-end distributed evaluation and probing pipeline (PyTorch),
-            maintaining the open-source
-            <a href="https://github.com/renrua52/hrm-mechanistic-analysis"
-              >codebase</a
-            >. (Resulted in a first-author paper.)
+            I conducted a systematic mechanistic study on Hierarchical Reasoning Models (HRMs). 
+            By probing latent-state trajectories and structural
+            geometry, I identified critical violations of fixed-point
+            assumptions, proving that advanced reasoners exhibit a hidden "guessing" shortcut.
+            Inspired by this insight, I engineered 3 training-free,
+            boosting accuracy on <em>Sudoku-Extreme</em> from 55% to <strong>97%</strong>.
           </li>
         </ul>
       </div>
 
       <div class="entry">
         <div class="entry-title">
-          Research Intern, Foundation Model Architecture &amp; Distillation
+          Research Intern, Long-Context Foundation Models
         </div>
         <div class="entry-meta">
           <span class="date">2025.06 — 2025.08</span> · ModelBest Inc.
@@ -117,18 +123,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </div>
         <ul>
           <li>
-            <strong>Architecture Exploration for SALA-9B:</strong> Served as an
-            early-stage collaborator exploring sub-quadratic model
-            architectures. Conducted fine-grained ablation studies on hybrid
-            lightning-attention modules in 0.6B-scale models.
-          </li>
-          <li>
-            <strong>Pre-training &amp; Evaluation:</strong> Executed a 3-stage
-            progressive knowledge distillation pipeline from Qwen3-0.6B via the
-            RADLADS protocol. Tracked training stability and evaluated
-            benchmarks (MMLU, HellaSwag, PIQA, etc.), laying the empirical
-            foundation for ModelBest's million-context
-            <strong>SALA-9B</strong> model.
+            As an early-stage collaborator exploring sub-quadratic MiniCPM model architectures,
+            I conducted fine-grained ablation studies on linear/sparse attention modules, laying the empirical
+            foundation for ModelBest's million-context <strong>SALA-9B</strong> model.
           </li>
         </ul>
       </div>
@@ -143,18 +140,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </div>
         <ul>
           <li>
-            <strong>Algorithm Design:</strong> Co-developed LLM×MapReduce-V2, a
-            novel test-time scaling framework borrowing CNN convolutional
-            concepts to map ultra-long contexts into structured, multi-stage
-            reasoning graphs for high-fidelity long-form text generation.
-          </li>
-          <li>
-            <strong>Implementation:</strong> Successfully scaled the algorithmic
-            prototype into
+            I co-developed LLM×MapReduce-V2, a test-time scaling framework borrowing CNN convolutional
+            concepts to map ultra-long contexts into structured graphs for long-to-long generation.
+            We scaled the algorithmic prototype into
             <a href="https://surveygo.znyx.com.cn/">SurveyGO</a>, ModelBest's
-            production-level academic survey platform. Designed the engine
-            handling incremental text refinement conditioned on dynamic
-            streaming references.
+            production-level academic survey platform, supporting long survey generation from massive references.
           </li>
         </ul>
       </div>
