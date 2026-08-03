@@ -149,6 +149,16 @@ a:hover { text-decoration-style: solid; text-decoration-color: var(--ink); }
 @keyframes blink { 50% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .cursor { animation: none; } }
 
+/* ---------------- landscape (side gutters) ---------------- */
+#landscape-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+}
+
 /* ---------------- attention layer ---------------- */
 .tok {
   border-radius: 2px;
@@ -240,7 +250,7 @@ a:hover { text-decoration-style: solid; text-decoration-color: var(--ink); }
 
 /* ---------------- print ---------------- */
 @media print {
-  .site-nav, .site-footer, #attn-controls { display: none !important; }
+  .site-nav, .site-footer, #attn-controls, #landscape-canvas { display: none !important; }
   body { font-size: 11.5px; }
   .wrap { max-width: none; padding: 0; }
   section.blk { padding: 16px 0 0; }
