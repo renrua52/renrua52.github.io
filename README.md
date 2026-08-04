@@ -20,7 +20,7 @@ npm run preview    # preview the production build
 | what          | where                                            |
 | ------------- | ------------------------------------------------ |
 | about page    | `src/pages/index.astro`                          |
-| blog posts    | `src/content/blog/*.md` (frontmatter + markdown) |
+| blog posts    | synced from [`renrua52/domain`](https://github.com/renrua52/domain) `source/_posts/` where `categories` contains `Science` (`npm run sync:blog`) |
 | publications  | `src/data/publications.json`                     |
 | cv (pdf; the nav links straight to it) | `public/assets/files/CV_Zirui_Ren.pdf` |
 | site metadata | `src/consts.ts`                                  |

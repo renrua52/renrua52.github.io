@@ -5,14 +5,18 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
+    "sync:blog": "python3 scripts/sync_science_posts.py",
     "build": "astro build",
     "preview": "astro preview",
     "attention": "python3 scripts/precompute_attention.py",
-    "build:full": "astro build && python3 scripts/precompute_attention.py"
+    "build:full": "npm run sync:blog && astro build && python3 scripts/precompute_attention.py"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.11",
     "@astrojs/sitemap": "^3.4.1",
-    "astro": "^5.13.2"
+    "astro": "^5.13.2",
+    "katex": "^0.18.1",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0"
   }
 }

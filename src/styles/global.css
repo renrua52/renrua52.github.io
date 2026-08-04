@@ -206,6 +206,8 @@ a:hover { text-decoration-style: solid; text-decoration-color: var(--ink); }
 
 /* rendered markdown (blog posts) */
 .prose { margin-top: 8px; }
+.prose .katex-display { margin: 1.1em 0; overflow-x: auto; overflow-y: hidden; }
+.prose .katex { font-size: 1.05em; }
 .prose p { margin-bottom: 1.2em; color: var(--body); font-size: 14.5px; }
 .prose h1, .prose h2, .prose h3, .prose h4 { margin: 2em 0 1em; line-height: 1.5; }
 .prose h1 { font-size: 20px; } .prose h1::before { content: "# "; color: var(--faint); font-weight: 400; }

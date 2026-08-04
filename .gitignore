@@ -7,5 +7,7 @@ node_modules/
 # python (attention precompute)
 .venv/
 __pycache__/
+# blog posts synced from renrua52/domain (scripts/sync_science_posts.py)
+src/content/blog/*.md
 # misc
 .DS_Store
