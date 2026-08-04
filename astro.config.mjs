@@ -2,8 +2,9 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import remarkMath from 'remark-math';
-import rehypeKatex from 'rehype-katex';
+import rehypeMathjax from 'rehype-mathjax/svg';
 
+// Match renrua52/domain: pandoc --mathjax + hexo-filter-mathjax (SVG).
 export default defineConfig({
   site: 'https://renrua52.github.io',
   integrations: [sitemap()],
@@ -12,6 +13,26 @@ export default defineConfig({
       theme: 'github-light',
     },
     remarkPlugins: [remarkMath],
-    rehypePlugins: [[rehypeKatex, { throwOnError: false, strict: "ignore" }]],
+    rehypePlugins: [
+      [
+        rehypeMathjax,
+        {
+          tex: {
+            tags: 'none',
+            inlineMath: [
+              ['$', '$'],
+              ['\\(', '\\)'],
+            ],
+            displayMath: [
+              ['$$', '$$'],
+              ['\\[', '\\]'],
+            ],
+          },
+          svg: {
+            fontCache: 'global',
+          },
+        },
+      ],
+    ],
   },
 });

@@ -78,17 +78,15 @@ def yaml_quote(s: str) -> str:
 
 
 def normalize_math(body: str) -> str:
-    """Make Hexo/MathJax-ish markup play with remark-math + KaTeX.
+    """Normalize display-math fences for remark-math + MathJax (SVG).
 
-    KaTeX rejects $$\\begin{align}...\\end{align}$$ (align is itself a
-    display env). Use aligned inside $$ instead. Also put $$ fences on
-    their own lines so micromark reliably detects display math — otherwise
-    a broken fence swallows the rest of the file and underscores become <em>.
+    Domain renders with pandoc --mathjax + hexo-filter-mathjax. We keep the
+    original TeX (including align environments — MathJax handles them) but
+    put $$ fences on their own lines so micromark reliably detects display
+    math; otherwise a broken fence swallows the rest of the file and
+    underscores become <em>.
     """
-    body = re.sub(r"\\begin\{align\*?\}", r"\\begin{aligned}", body)
-    body = re.sub(r"\\end\{align\*?\}", r"\\end{aligned}", body)
 
-    # $$...$$ on one line → keep, but ensure multiline blocks use bare fences
     def split_fence(match: re.Match[str]) -> str:
         inner = match.group(1).strip("\n")
         return f"\n$$\n{inner}\n$$\n"
