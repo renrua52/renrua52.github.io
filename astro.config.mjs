@@ -28,8 +28,11 @@ export default defineConfig({
               ['\\[', '\\]'],
             ],
           },
+          // 'global' emits <use href="#MJX-…"> without shipping the shared
+          // glyph defs → blank formulas. 'none' inlines paths like
+          // hexo-filter-mathjax on renrua52/domain.
           svg: {
-            fontCache: 'global',
+            fontCache: 'none',
           },
         },
       ],
