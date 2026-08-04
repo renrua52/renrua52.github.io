@@ -77,6 +77,26 @@ def yaml_quote(s: str) -> str:
     return f'"{s}"'
 
 
+def normalize_math(body: str) -> str:
+    """Make Hexo/MathJax-ish markup play with remark-math + KaTeX.
+
+    KaTeX rejects $$\\begin{align}...\\end{align}$$ (align is itself a
+    display env). Use aligned inside $$ instead. Also put $$ fences on
+    their own lines so micromark reliably detects display math — otherwise
+    a broken fence swallows the rest of the file and underscores become <em>.
+    """
+    body = re.sub(r"\\begin\{align\*?\}", r"\\begin{aligned}", body)
+    body = re.sub(r"\\end\{align\*?\}", r"\\end{aligned}", body)
+
+    # $$...$$ on one line → keep, but ensure multiline blocks use bare fences
+    def split_fence(match: re.Match[str]) -> str:
+        inner = match.group(1).strip("\n")
+        return f"\n$$\n{inner}\n$$\n"
+
+    body = re.sub(r"\$\$\s*\n?(.*?)\n?\s*\$\$", split_fence, body, flags=re.S)
+    return body
+
+
 def convert(src: Path) -> str:
     raw = src.read_text(encoding="utf-8")
     m = FM_RE.match(raw)
@@ -87,6 +107,7 @@ def convert(src: Path) -> str:
         raise ValueError(f"{src.name}: not Science")
     title = parse_title(fm, src.stem)
     pub = parse_date(fm)
+    body = normalize_math(body)
     desc = excerpt(body)
     header = "\n".join(
         [
