@@ -6,7 +6,7 @@ on:
   workflow_dispatch: {}
   # pick up new Science posts from renrua52/domain even if this repo is quiet
   schedule:
-    - cron: "0 16 * * 1" # Mondays 16:00 UTC
+    - cron: "0 0 * * *" # daily 00:00 UTC = 08:00 Beijing
 
 permissions:
   contents: read
