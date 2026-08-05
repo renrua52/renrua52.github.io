@@ -1,13 +1,24 @@
 /* side-gutter loss-landscape contours.
  * charcoal isolines over a slow-drifting scalar field;
- * only paints outside the centered .wrap column. */
+ * only paints outside the centered .wrap column.
+ * click in a gutter: a short gradient streak slides uphill and fades at the peak. */
 (() => {
   const MIN_SIDE = 72; // px of side gutter required to show anything
-  const LEVELS = 18;
-  const CELL = 10; // marching-squares cell size (css px)
+  const LEVELS = 28;
+  const CELL = 9; // marching-squares cell size (css px)
   const FADE = 56; // soft fade into the content column
-  const ALPHA = 0.18; // base stroke opacity — denser lines, slightly softer each
+  const ALPHA = 0.11; // base stroke opacity — denser lines, softer each
   const PERIOD = 52000; // ms for one full morph cycle
+
+  // short gradient streak (click reveal)
+  const TRAIL_STEP = 0.003; // integration step (normalized)
+  const TRAIL_HALF = 0.032; // half-length of visible streak
+  const TRAIL_SPEED = 0.11; // uphill speed (normalized / sec)
+  const TRAIL_STOP = 0.04; // fade / stop before peak (avoids noisy tip)
+  const TRAIL_ALIGN = 0.2; // reject direction flips near criticals
+  const TRAIL_DIE = 480; // ms fade-out once near peak
+  const TRAIL_WIDTH = 1.6;
+  const TRAIL_ALPHA = 0.32;
 
   const canvas = document.createElement("canvas");
   canvas.id = "landscape-canvas";
@@ -58,7 +69,11 @@
   let dpr = 1;
   let raf = 0;
   let t0 = performance.now();
+  let lastNow = 0;
   const staticMode = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /** @type {{ nx: number, ny: number, dying: number }[]} */
+  const trails = [];
 
   function measure() {
     const wrap = document.querySelector(".wrap");
@@ -96,6 +111,13 @@
     return z;
   }
 
+  function grad(nx, ny, t) {
+    const h = 0.0015;
+    const gx = (field(nx + h, ny, t) - field(nx - h, ny, t)) / (2 * h);
+    const gy = (field(nx, ny + h, t) - field(nx, ny - h, t)) / (2 * h);
+    return [gx, gy];
+  }
+
   function edgePoint(edge, x0, y0, x1, y1, v0, v1, v2, v3, level) {
     const lerp = (a, b, va, vb) => {
       const u = (level - va) / (vb - va || 1e-9);
@@ -125,9 +147,155 @@
     return d >= FADE ? 1 : d / FADE;
   }
 
-  function draw(t) {
-    ctx.clearRect(0, 0, W, H);
+  function inGutter(x) {
+    return x < wrapLeft - 4 || x > wrapRight + 4;
+  }
+
+  /** Integrate along ±∇ from (nx0,ny0) up to maxDist. Returns [nx,ny,...] excluding start. */
+  function integrateAlong(nx0, ny0, t, sign, maxDist) {
+    const out = [];
+    let nx = nx0;
+    let ny = ny0;
+    let traveled = 0;
+    let zPrev = field(nx, ny, t);
+    let prevUx = 0;
+    let prevUy = 0;
+    let hasDir = false;
+    const maxSteps = Math.ceil(maxDist / TRAIL_STEP) + 2;
+
+    for (let i = 0; i < maxSteps && traveled < maxDist; i++) {
+      const [gx, gy] = grad(nx, ny, t);
+      const mag = Math.hypot(gx, gy);
+      if (mag < TRAIL_STOP) break;
+
+      const ux = gx / mag;
+      const uy = gy / mag;
+      if (hasDir && ux * prevUx + uy * prevUy < TRAIL_ALIGN) break;
+
+      const step = Math.min(TRAIL_STEP, maxDist - traveled);
+      const nxNext = nx + sign * ux * step;
+      const nyNext = ny + sign * uy * step;
+      if (nxNext < 0.01 || nxNext > 0.99 || nyNext < 0.01 || nyNext > 0.99) break;
+
+      const z = field(nxNext, nyNext, t);
+      if (sign < 0 && z >= zPrev - 1e-7) break;
+      if (sign > 0 && z <= zPrev + 1e-7) break;
+
+      nx = nxNext;
+      ny = nyNext;
+      zPrev = z;
+      prevUx = ux;
+      prevUy = uy;
+      hasDir = true;
+      traveled += step;
+      out.push(nx, ny);
+    }
+    return out;
+  }
+
+  /** Advance uphill (+∇) by `dist`. Returns new pos, or null if near peak. */
+  function stepUphill(nx, ny, t, dist) {
+    if (dist <= 0) return { nx, ny };
+    const [gx0, gy0] = grad(nx, ny, t);
+    if (Math.hypot(gx0, gy0) < TRAIL_STOP) return null;
+    const path = integrateAlong(nx, ny, t, 1, dist);
+    if (!path.length) return null;
+    const i = path.length - 2;
+    const nx2 = path[i];
+    const ny2 = path[i + 1];
+    // refuse the last steps into the critical neighborhood
+    const [gx1, gy1] = grad(nx2, ny2, t);
+    if (Math.hypot(gx1, gy1) < TRAIL_STOP) return null;
+    return { nx: nx2, ny: ny2 };
+  }
+
+  /** Short streak along ∇ through (nx,ny): uphill then downhill, seed in the middle. */
+  function sampleStreak(nx, ny, t) {
+    const up = integrateAlong(nx, ny, t, 1, TRAIL_HALF);
+    const down = integrateAlong(nx, ny, t, -1, TRAIL_HALF);
+    const pts = [];
+    for (let i = up.length - 2; i >= 0; i -= 2) {
+      pts.push(up[i] * W, up[i + 1] * H);
+    }
+    pts.push(nx * W, ny * H);
+    for (let i = 0; i < down.length; i += 2) {
+      pts.push(down[i] * W, down[i + 1] * H);
+    }
+    return pts;
+  }
+
+  function spawnTrail(clientX, clientY) {
+    if (!inGutter(clientX)) return;
     if (wrapLeft < MIN_SIDE && W - wrapRight < MIN_SIDE) return;
+    const nx = clientX / W;
+    const ny = clientY / H;
+    if (nx <= 0 || nx >= 1 || ny <= 0 || ny >= 1) return;
+    trails.push({ nx, ny, dying: 0 });
+    while (trails.length > 4) trails.shift();
+  }
+
+  function drawTrails(now, t, dt) {
+    ctx.lineWidth = TRAIL_WIDTH;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+
+    for (let i = trails.length - 1; i >= 0; i--) {
+      const tr = trails[i];
+
+      if (!tr.dying) {
+        const next = stepUphill(tr.nx, tr.ny, t, TRAIL_SPEED * dt);
+        if (!next) {
+          tr.dying = now;
+        } else {
+          tr.nx = next.nx;
+          tr.ny = next.ny;
+        }
+      }
+
+      let base = TRAIL_ALPHA;
+      if (tr.dying) {
+        const u = (now - tr.dying) / TRAIL_DIE;
+        if (u >= 1) {
+          trails.splice(i, 1);
+          continue;
+        }
+        base *= 1 - u;
+      }
+
+      const pts = sampleStreak(tr.nx, tr.ny, t);
+      const n = pts.length / 2;
+      if (n < 2) {
+        if (!tr.dying) tr.dying = now;
+        continue;
+      }
+
+      // stroke pairwise with sine envelope → fade at both ends
+      for (let k = 0; k < n - 1; k++) {
+        const x0 = pts[k * 2];
+        const y0 = pts[k * 2 + 1];
+        const x1 = pts[k * 2 + 2];
+        const y1 = pts[k * 2 + 3];
+        const side = Math.min(sideAlpha(x0), sideAlpha(x1));
+        if (side < 0.05) continue;
+        const u = (k + 0.5) / (n - 1);
+        const env = Math.sin(Math.PI * u);
+        const a = base * env * side;
+        if (a < 0.01) continue;
+        ctx.strokeStyle = `rgba(38, 38, 36, ${a.toFixed(3)})`;
+        ctx.beginPath();
+        ctx.moveTo(x0, y0);
+        ctx.lineTo(x1, y1);
+        ctx.stroke();
+      }
+    }
+  }
+
+  function draw(t, now, dt) {
+    ctx.clearRect(0, 0, W, H);
+    if (wrapLeft < MIN_SIDE && W - wrapRight < MIN_SIDE) {
+      drawTrails(now, t, dt);
+      return;
+    }
 
     const cols = Math.max(2, Math.ceil(W / CELL));
     const rows = Math.max(2, Math.ceil(H / CELL));
@@ -162,7 +330,6 @@
           const x0 = (i / cols) * W;
           const x1 = ((i + 1) / cols) * W;
 
-          // skip cells fully inside the content column
           if (x0 >= wrapLeft && x1 <= wrapRight) continue;
 
           const v0 = grid[j * stride + i];
@@ -192,31 +359,48 @@
         }
       }
     }
+
+    drawTrails(now, t, dt);
   }
 
   function frame(now) {
-    draw(now - t0);
-    if (!staticMode) raf = requestAnimationFrame(frame);
+    const dt = lastNow ? Math.min(0.05, (now - lastNow) / 1000) : 0;
+    lastNow = now;
+    draw(now - t0, now, dt);
+    if (!staticMode || trails.length) raf = requestAnimationFrame(frame);
+    else {
+      raf = 0;
+      lastNow = 0;
+    }
   }
 
   function start() {
     resize();
     cancelAnimationFrame(raf);
     t0 = performance.now();
-    if (staticMode) draw(0);
-    else raf = requestAnimationFrame(frame);
+    lastNow = 0;
+    raf = requestAnimationFrame(frame);
   }
 
   window.addEventListener("resize", () => {
     resize();
-    if (staticMode) draw(0);
   });
 
-  // remeasure after fonts / layout settle
+  // click in gutter → short uphill streak (canvas is pointer-events: none)
+  window.addEventListener(
+    "click",
+    (e) => {
+      if (staticMode) return;
+      if (e.button !== undefined && e.button !== 0) return;
+      spawnTrail(e.clientX, e.clientY);
+      if (!raf) raf = requestAnimationFrame(frame);
+    },
+    true
+  );
+
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(() => {
       measure();
-      if (staticMode) draw(0);
     });
   }
 
