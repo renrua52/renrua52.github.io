@@ -40,8 +40,15 @@ const navItems: { id: string; label: string; href: string; external?: boolean }[
   <body>
     <div class="wrap">
       <nav class="site-nav">
-        <a class="prompt" href="/"
-          ><span class="user">zirui@thu</span> ~ % {prompt ?? "ls"}</a
+        <span class="prompt"
+          ><a class="user" href="/">zirui@thu</a>
+          <a
+            class="tilde"
+            href="https://renrua52.github.io/domain/"
+            aria-label="domain"
+            title="domain">~</a
+          >
+          % {prompt ?? "ls"}</span
         >
         <div class="nav-links">
           {
@@ -57,13 +64,11 @@ const navItems: { id: string; label: string; href: string; external?: boolean }[
           }
         </div>
       </nav>
-
       <slot />
 
       <footer class="site-footer">
         <span>© 2026 Zirui Ren</span>
         <span>
-          <a href="https://renrua52.github.io/domain/">domain</a> ·
           <a href={SITE.github}>github</a> · <a href={SITE.twitter}>twitter</a> ·
           <a href={`mailto:${SITE.email}`}>email</a><span class="cursor"></span>
         </span>
