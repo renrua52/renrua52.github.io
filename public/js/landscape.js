@@ -12,8 +12,9 @@
 
   // climbing light + wake (click reveal)
   const TRAIL_STEP = 0.003; // integration step (normalized)
-  const TRAIL_SPEED = 0.055; // speed scale: |∇z| · this → normalized / sec
-  const TRAIL_SPEED_MAX = 0.2; // hard cap (normalized / sec)
+  const TRAIL_SPEED = 0.055; // low-|∇| gain: speed ≈ this · |∇z|
+  const TRAIL_GRAD_REF = 1.8; // soft roll-off scale; high |∇| grows slower
+  const TRAIL_SPEED_MAX = 0.11; // safety cap (normalized / sec)
   const TRAIL_STOP = 0.04; // fade / stop before peak (avoids noisy tip)
   const TRAIL_ALIGN = 0.2; // reject direction flips near criticals
   const TRAIL_DIE = 480; // ms fade-out once near peak
@@ -248,7 +249,11 @@
       if (!tr.dying) {
         const [gx, gy] = grad(tr.nx, tr.ny, t);
         const mag = Math.hypot(gx, gy);
-        const speed = Math.min(TRAIL_SPEED * mag, TRAIL_SPEED_MAX);
+        // low |∇| ≈ linear; high |∇| soft-saturates so peaks climb slower
+        const speed = Math.min(
+          (TRAIL_SPEED * mag) / Math.sqrt(1 + (mag / TRAIL_GRAD_REF) * (mag / TRAIL_GRAD_REF)),
+          TRAIL_SPEED_MAX
+        );
         // momentum: smoothed speed → drives wake length
         tr.mom += (speed - tr.mom) * Math.min(1, dt * 8);
         const dist = speed * dt;
