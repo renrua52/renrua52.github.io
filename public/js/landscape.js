@@ -1,7 +1,7 @@
 /* side-gutter loss-landscape contours.
  * charcoal isolines over a slow-drifting scalar field;
  * only paints outside the centered .wrap column.
- * click in a gutter: a short gradient streak slides uphill and fades at the peak. */
+ * click in a gutter: a small light climbs +∇ with a short momentum wake. */
 (() => {
   const MIN_SIDE = 72; // px of side gutter required to show anything
   const LEVELS = 28;
@@ -10,15 +10,18 @@
   const ALPHA = 0.11; // base stroke opacity — denser lines, softer each
   const PERIOD = 52000; // ms for one full morph cycle
 
-  // short gradient streak (click reveal)
+  // climbing light + wake (click reveal)
   const TRAIL_STEP = 0.003; // integration step (normalized)
-  const TRAIL_HALF = 0.032; // half-length of visible streak
-  const TRAIL_SPEED = 0.11; // uphill speed (normalized / sec)
+  const TRAIL_SPEED = 0.055; // speed scale: |∇z| · this → normalized / sec
+  const TRAIL_SPEED_MAX = 0.2; // hard cap (normalized / sec)
   const TRAIL_STOP = 0.04; // fade / stop before peak (avoids noisy tip)
   const TRAIL_ALIGN = 0.2; // reject direction flips near criticals
   const TRAIL_DIE = 480; // ms fade-out once near peak
-  const TRAIL_WIDTH = 1.6;
-  const TRAIL_ALPHA = 0.32;
+  const TRAIL_WAKE_MIN = 0.009; // wake length at low momentum (normalized)
+  const TRAIL_WAKE_MAX = 0.035; // wake length at high momentum — keep short
+  const TRAIL_DOT = 2.2; // head radius (css px)
+  const TRAIL_ALPHA = 0.45;
+  const TRAIL_WAKE_WIDTH = 1.35;
 
   const canvas = document.createElement("canvas");
   canvas.id = "landscape-canvas";
@@ -72,7 +75,7 @@
   let lastNow = 0;
   const staticMode = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /** @type {{ nx: number, ny: number, dying: number }[]} */
+  /** @type {{ nx: number, ny: number, dying: number, mom: number, hist: number[] }[]} */
   const trails = [];
 
   function measure() {
@@ -209,19 +212,20 @@
     return { nx: nx2, ny: ny2 };
   }
 
-  /** Short streak along ∇ through (nx,ny): uphill then downhill, seed in the middle. */
-  function sampleStreak(nx, ny, t) {
-    const up = integrateAlong(nx, ny, t, 1, TRAIL_HALF);
-    const down = integrateAlong(nx, ny, t, -1, TRAIL_HALF);
-    const pts = [];
-    for (let i = up.length - 2; i >= 0; i -= 2) {
-      pts.push(up[i] * W, up[i + 1] * H);
+  /** Keep only the newest arc of hist whose length ≤ maxLen (normalized). */
+  function trimWake(hist, maxLen) {
+    const n = hist.length / 2;
+    if (n < 2) return;
+    let len = 0;
+    let cut = 0;
+    for (let i = n - 1; i > 0; i--) {
+      len += Math.hypot(hist[i * 2] - hist[(i - 1) * 2], hist[i * 2 + 1] - hist[(i - 1) * 2 + 1]);
+      if (len > maxLen) {
+        cut = i;
+        break;
+      }
     }
-    pts.push(nx * W, ny * H);
-    for (let i = 0; i < down.length; i += 2) {
-      pts.push(down[i] * W, down[i + 1] * H);
-    }
-    return pts;
+    if (cut > 0) hist.splice(0, cut * 2);
   }
 
   function spawnTrail(clientX, clientY) {
@@ -230,12 +234,11 @@
     const nx = clientX / W;
     const ny = clientY / H;
     if (nx <= 0 || nx >= 1 || ny <= 0 || ny >= 1) return;
-    trails.push({ nx, ny, dying: 0 });
+    trails.push({ nx, ny, dying: 0, mom: 0, hist: [nx, ny] });
     while (trails.length > 4) trails.shift();
   }
 
   function drawTrails(now, t, dt) {
-    ctx.lineWidth = TRAIL_WIDTH;
     ctx.lineJoin = "round";
     ctx.lineCap = "round";
 
@@ -243,14 +246,28 @@
       const tr = trails[i];
 
       if (!tr.dying) {
-        const next = stepUphill(tr.nx, tr.ny, t, TRAIL_SPEED * dt);
+        const [gx, gy] = grad(tr.nx, tr.ny, t);
+        const mag = Math.hypot(gx, gy);
+        const speed = Math.min(TRAIL_SPEED * mag, TRAIL_SPEED_MAX);
+        // momentum: smoothed speed → drives wake length
+        tr.mom += (speed - tr.mom) * Math.min(1, dt * 8);
+        const dist = speed * dt;
+        const next = stepUphill(tr.nx, tr.ny, t, dist);
         if (!next) {
           tr.dying = now;
         } else {
           tr.nx = next.nx;
           tr.ny = next.ny;
+          tr.hist.push(tr.nx, tr.ny);
         }
+      } else {
+        tr.mom *= Math.max(0, 1 - dt * 4);
       }
+
+      const wakeLen =
+        TRAIL_WAKE_MIN +
+        (TRAIL_WAKE_MAX - TRAIL_WAKE_MIN) * Math.min(1, tr.mom / TRAIL_SPEED_MAX);
+      trimWake(tr.hist, wakeLen);
 
       let base = TRAIL_ALPHA;
       if (tr.dying) {
@@ -262,30 +279,39 @@
         base *= 1 - u;
       }
 
-      const pts = sampleStreak(tr.nx, tr.ny, t);
-      const n = pts.length / 2;
-      if (n < 2) {
-        if (!tr.dying) tr.dying = now;
-        continue;
+      const hist = tr.hist;
+      const n = hist.length / 2;
+
+      // wake: oldest → newest, fade toward the tail
+      if (n >= 2) {
+        ctx.lineWidth = TRAIL_WAKE_WIDTH;
+        for (let k = 0; k < n - 1; k++) {
+          const x0 = hist[k * 2] * W;
+          const y0 = hist[k * 2 + 1] * H;
+          const x1 = hist[k * 2 + 2] * W;
+          const y1 = hist[k * 2 + 3] * H;
+          const side = Math.min(sideAlpha(x0), sideAlpha(x1));
+          if (side < 0.05) continue;
+          const along = (k + 0.5) / (n - 1); // 0 = tail, 1 = head
+          const a = base * 0.55 * along * along * side;
+          if (a < 0.01) continue;
+          ctx.strokeStyle = `rgba(38, 38, 36, ${a.toFixed(3)})`;
+          ctx.beginPath();
+          ctx.moveTo(x0, y0);
+          ctx.lineTo(x1, y1);
+          ctx.stroke();
+        }
       }
 
-      // stroke pairwise with sine envelope → fade at both ends
-      for (let k = 0; k < n - 1; k++) {
-        const x0 = pts[k * 2];
-        const y0 = pts[k * 2 + 1];
-        const x1 = pts[k * 2 + 2];
-        const y1 = pts[k * 2 + 3];
-        const side = Math.min(sideAlpha(x0), sideAlpha(x1));
-        if (side < 0.05) continue;
-        const u = (k + 0.5) / (n - 1);
-        const env = Math.sin(Math.PI * u);
-        const a = base * env * side;
-        if (a < 0.01) continue;
-        ctx.strokeStyle = `rgba(38, 38, 36, ${a.toFixed(3)})`;
+      // head: charcoal point
+      const hx = tr.nx * W;
+      const hy = tr.ny * H;
+      const side = sideAlpha(hx);
+      if (side >= 0.05) {
         ctx.beginPath();
-        ctx.moveTo(x0, y0);
-        ctx.lineTo(x1, y1);
-        ctx.stroke();
+        ctx.arc(hx, hy, TRAIL_DOT, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(38, 38, 36, ${(base * side).toFixed(3)})`;
+        ctx.fill();
       }
     }
   }
@@ -386,7 +412,7 @@
     resize();
   });
 
-  // click in gutter → short uphill streak (canvas is pointer-events: none)
+  // click in gutter → climbing light with wake (canvas is pointer-events: none)
   window.addEventListener(
     "click",
     (e) => {
