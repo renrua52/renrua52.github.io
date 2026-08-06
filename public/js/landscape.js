@@ -15,7 +15,7 @@
   const TRAIL_SPEED = 0.055; // low-|∇| gain: speed ≈ this · |∇z|
   const TRAIL_GRAD_REF = 1.8; // soft roll-off scale; high |∇| grows slower
   const TRAIL_SPEED_MAX = 0.11; // safety cap (normalized / sec)
-  const TRAIL_STOP = 0.04; // fade / stop before peak (avoids noisy tip)
+  const TRAIL_STOP = 0.07; // fade / stop before peak (avoids noisy tip)
   const TRAIL_ALIGN = 0.2; // reject direction flips near criticals
   const TRAIL_DIE = 480; // ms fade-out once near peak
   const TRAIL_WAKE_MIN = 0.009; // wake length at low momentum (normalized)
